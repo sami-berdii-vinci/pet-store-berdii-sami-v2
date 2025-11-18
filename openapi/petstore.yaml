@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: Petstore (extrait pédagogique)
+  version: 0.1.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /pets:
+    get:
+      summary: List pets
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, default: 100 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+    post:
+      summary: Create a pet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        "400":
+          description: Invalid input
+  /pets/{id}:
+    get:
+      summary: Info for a specific pet
+      parameters:
+        - in: path
+          name: id
+          schema: { type: integer, minimum: 1 }
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        "404":
+          description: Not found
+    patch:
+      summary: Partial update a pet
+      parameters:
+        - in: path
+          name: id
+          schema: { type: integer, minimum: 1 }
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                name: { type: string }
+                tag: { type: string }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        "400":
+          description: Invalid input
+        "404":
+          description: Not found
+components:
+  schemas:
+    Pet:
+      type: object
+      required: [ id, name, tag ]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        tag: { type: string }
+    NewPet:
+      type: object
+      required: [ name, tag ]
+      properties:
+        name: { type: string }
+        tag: { type: string }
