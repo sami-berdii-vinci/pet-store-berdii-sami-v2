@@ -9,27 +9,45 @@ function validateNewPet(body) {
   if (!body || typeof body !== "object") {
     throw new Error("Request body must be a JSON object");
   }
-  
+
   if (typeof body.name !== "string" || body.name.trim() === "") {
     throw new Error("Field 'name' is required and must be a non-empty string");
   }
-  
+
   if (typeof body.tag !== "string" || body.tag.trim() === "") {
     throw new Error("Field 'tag' is required and must be a non-empty string");
   }
-  
+
   // Check for additional properties (additionalProperties: false)
   const allowedKeys = ["name", "tag"];
-  const extraKeys = Object.keys(body).filter(key => !allowedKeys.includes(key));
+  const extraKeys = Object.keys(body).filter(
+    (key) => !allowedKeys.includes(key)
+  );
   if (extraKeys.length > 0) {
-    throw new Error(`Additional properties not allowed: ${extraKeys.join(", ")}`);
+    throw new Error(
+      `Additional properties not allowed: ${extraKeys.join(", ")}`
+    );
   }
 }
 
-// GET /pets?limit=
+// GET /pets?limit=&offset=
 router.get("/", (req, res) => {
   const limit = Number(req.query.limit ?? 100);
-  const data = pets.list(limit);
+  const offset = Number(req.query.offset ?? 0);
+
+  // Validate pagination parameters
+  if (limit < 1 || isNaN(limit)) {
+    return res
+      .status(400)
+      .json({ message: "Parameter 'limit' must be a positive integer" });
+  }
+  if (offset < 0 || isNaN(offset)) {
+    return res
+      .status(400)
+      .json({ message: "Parameter 'offset' must be a non-negative integer" });
+  }
+
+  const data = pets.list(limit, offset);
   res.json(data);
 });
 

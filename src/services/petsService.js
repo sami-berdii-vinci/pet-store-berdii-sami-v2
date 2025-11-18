@@ -1,7 +1,7 @@
 import { db } from "../store/memory.js";
 
-export function list(limit = 100) {
-  return db.pets.slice(0, limit);
+export function list(limit = 100, offset = 0) {
+  return db.pets.slice(offset, offset + limit);
 }
 
 export function getById(id) {

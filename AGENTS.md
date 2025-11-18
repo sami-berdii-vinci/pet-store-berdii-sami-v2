@@ -7,3 +7,4 @@ Aider à implémenter des endpoints PetStore (partiels) en respectant la spec et
 1. Ne renomme pas les fichiers existants.
 2. Ne modifie pas la structure des dossiers.
 3. Ne change pas les endpoints existants, sauf si je te le demande explicitement.
+4. Ajoute les tests nécessaires lors de la création de nouvelles fonctionnalités, sans modifier les tests existants.
